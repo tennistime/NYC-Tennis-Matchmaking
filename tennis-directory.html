@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tennis group — member directory</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem; }
+  .page { max-width: 680px; margin: 0 auto; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+  .logo { width: 36px; height: 36px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-text h1 { font-size: 18px; font-weight: 600; }
+  .header-text p { font-size: 13px; color: #666; margin-top: 1px; }
+  .controls { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .controls input { flex: 1; min-width: 160px; font-size: 14px; padding: 9px 11px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #1a1a1a; outline: none; }
+  .controls input:focus { border-color: #378ADD; }
+  .controls select { font-size: 13px; padding: 9px 11px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #1a1a1a; outline: none; }
+  .count { font-size: 13px; color: #888; margin-bottom: 0.75rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+  .card { background: #fff; border: 1px solid #e8e8e3; border-radius: 12px; padding: 14px 16px; }
+  .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+  .card-name { font-size: 15px; font-weight: 600; }
+  .card-hood { font-size: 12px; color: #888; }
+  .divider { border: none; border-top: 1px solid #f0f0ec; margin: 10px 0; }
+  .row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; gap: 8px; }
+  .row .lbl { color: #888; flex-shrink: 0; }
+  .row .val { text-align: right; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; margin: 1px; }
+  .b-blue { background: #E6F1FB; color: #0C447C; }
+  .b-teal { background: #E1F5EE; color: #085041; }
+  .b-amber { background: #FAEEDA; color: #633806; }
+  .b-coral { background: #FAECE7; color: #993C1D; }
+  .b-purple { background: #EEEDFE; color: #3C3489; }
+  .tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+  .avail-section { margin-top: 8px; }
+  .avail-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .avail-mini { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .day-col { background: #f9f9f7; border-radius: 4px; padding: 3px 2px; text-align: center; }
+  .day-name { font-size: 10px; font-weight: 500; color: #999; margin-bottom: 2px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; margin: 1px auto; }
+  .dot-on { background: #378ADD; }
+  .dot-off { background: #e8e8e3; }
+  .note { margin-top: 8px; font-size: 12px; color: #888; font-style: italic; }
+  .empty { text-align: center; padding: 3rem 1rem; color: #aaa; font-size: 14px; grid-column: 1/-1; }
+  .join-link { display: block; text-align: center; margin-bottom: 1.5rem; font-size: 13px; color: #378ADD; text-decoration: none; }
+  .join-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M5.3 5.3a10 10 0 0 1 13.4 13.4M18.7 5.3a10 10 0 0 1-13.4 13.4"/></svg>
+    </div>
+    <div class="header-text">
+      <h1>Tennis group</h1>
+      <p>Member directory</p>
+    </div>
+  </div>
+
+  <a class="join-link" href="tennis-form.html">+ Add yourself to the directory</a>
+
+  <div class="controls">
+    <input id="search" placeholder="Search by name or neighborhood..." oninput="render()" />
+    <select id="f-ntrp" onchange="render()">
+      <option value="">All skill levels</option>
+      <option>2.0 – Beginner</option><option>2.5 – Advanced beginner</option>
+      <option>3.0 – Intermediate</option><option>3.5 – Strong intermediate</option>
+      <option>4.0 – Advanced</option><option>4.5 – Strong advanced</option>
+      <option>5.0+ – Competitive</option>
+    </select>
+    <select id="f-style" onchange="render()">
+      <option value="">All play styles</option>
+      <option>Singles (casual)</option>
+      <option>Doubles (casual)</option>
+      <option>Looking to rally / hit around</option>
+      <option>Singles (competitive)</option>
+      <option>Doubles (competitive)</option>
+    </select>
+  </div>
+
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'tennis-dir-members-v1';
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const SLOTS = ['Before 9am','9am–12pm','12–3pm','3–6pm','6pm+'];
+const AV_COLORS = [
+  {bg:'#E6F1FB',c:'#0C447C'},{bg:'#E1F5EE',c:'#085041'},
+  {bg:'#EEEDFE',c:'#3C3489'},{bg:'#FAECE7',c:'#993C1D'},
+  {bg:'#FBEAF0',c:'#993556'},{bg:'#FAEEDA',c:'#633806'},
+];
+
+function getMembers() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function avatarColor(m) {
+  let h = 0; (m.first + m.lastInit).split('').forEach(c => h = (h*31 + c.charCodeAt(0)) % 997);
+  return AV_COLORS[Math.abs(h) % AV_COLORS.length];
+}
+
+function initials(m) { return (m.first[0]||'').toUpperCase() + (m.lastInit||''); }
+
+function ntrpBadge(n) {
+  if (!n) return '';
+  const num = parseFloat(n);
+  const cls = num>=4.5?'b-coral':num>=3.5?'b-blue':num>=3?'b-teal':'b-amber';
+  return `<span class="badge ${cls}">${n}</span>`;
+}
+
+function styleBadge(s) {
+  if (!s) return '';
+  if (s.includes('rally')) return `<span class="badge b-purple">${s}</span>`;
+  if (s.includes('competitive')) return `<span class="badge b-coral">${s}</span>`;
+  return `<span class="badge b-blue">${s}</span>`;
+}
+
+function availGrid(avail) {
+  if (!avail || typeof avail !== 'object' || Array.isArray(avail)) return '';
+  if (!DAYS.some(d => avail[d] && avail[d].length)) return '';
+  return `<div class="avail-section">
+    <div class="avail-label">Availability</div>
+    <div class="avail-mini">
+      ${DAYS.map(d => {
+        const slots = avail[d] || [];
+        return `<div class="day-col">
+          <div class="day-name">${d}</div>
+          ${SLOTS.map(s => `<div class="dot ${slots.includes(s)?'dot-on':'dot-off'}"></div>`).join('')}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function render() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const fn = document.getElementById('f-ntrp').value;
+  const fs = document.getElementById('f-style').value;
+  const members = getMembers();
+  const filtered = members.filter(m => {
+    const matchQ = !q || (m.first + ' ' + m.lastInit).toLowerCase().includes(q) || (m.hood||'').toLowerCase().includes(q);
+    const matchN = !fn || m.ntrp === fn;
+    const styles = m.styles || (m.style ? [m.style] : []);
+    const matchS = !fs || styles.includes(fs);
+    return matchQ && matchN && matchS;
+  });
+  document.getElementById('count').textContent = filtered.length + ' member' + (filtered.length !== 1 ? 's' : '') + ' found';
+  if (!filtered.length) {
+    document.getElementById('grid').innerHTML = '<div class="empty">No members yet. <a href="tennis-form.html">Be the first to join!</a></div>';
+    return;
+  }
+  document.getElementById('grid').innerHTML = filtered.map(m => {
+    const av = avatarColor(m);
+    const styles = m.styles || (m.style ? [m.style] : []);
+    return `<div class="card">
+      <div class="card-top">
+        <div class="avatar" style="background:${av.bg};color:${av.c};">${initials(m)}</div>
+        <div>
+          <div class="card-name">${m.first} ${m.lastInit}.</div>
+          <div class="card-hood">${m.hood || '—'}</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="row"><span class="lbl">Skill</span><span class="val">${ntrpBadge(m.ntrp)||'—'}</span></div>
+      <div class="row"><span class="lbl">Style</span><span class="val" style="display:flex;flex-wrap:wrap;gap:2px;justify-content:flex-end">${styles.map(styleBadge).join('')||'—'}</span></div>
+      <div class="row"><span class="lbl">Contact</span><span class="val" style="color:#378ADD">${m.contact||'—'}</span></div>
+      ${m.courts&&m.courts.length?`<div class="tags">${m.courts.map(c=>`<span class="badge b-teal">${c}</span>`).join('')}</div>`:''}
+      ${availGrid(m.avail)}
+      ${m.note?`<div class="note">${m.note}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+render();
+setInterval(render, 5000);
+</script>
+</body>
+</html>

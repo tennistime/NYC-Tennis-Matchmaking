@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tennis group — join the directory</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem; }
+  .card { background: #fff; border-radius: 14px; border: 1px solid #e5e5e0; max-width: 620px; margin: 0 auto; padding: 2rem; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+  .logo { width: 36px; height: 36px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo svg { display: block; }
+  .header-text h1 { font-size: 18px; font-weight: 600; }
+  .header-text p { font-size: 13px; color: #666; margin-top: 1px; }
+  .section-sub { font-size: 14px; color: #666; margin-bottom: 1.5rem; }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; font-size: 14px; padding: 9px 11px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #1a1a1a; outline: none; transition: border-color 0.15s; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: #378ADD; }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .check-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .check-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border: 1px solid #ddd; border-radius: 99px; font-size: 13px; cursor: pointer; user-select: none; background: #fff; color: #555; transition: all 0.15s; }
+  .check-pill:hover { border-color: #aaa; }
+  .check-pill.sel-blue { background: #E6F1FB; color: #0C447C; border-color: #85B7EB; }
+  .check-pill.sel-coral { background: #FAECE7; color: #993C1D; border-color: #F0997B; }
+  .check-pill.sel-purple { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+  .check-pill input { display: none; }
+  .group-label { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin: 8px 0 5px; }
+  .avail-wrap { background: #f9f9f7; border-radius: 8px; padding: 10px; overflow-x: auto; }
+  table.avail { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.avail th { font-size: 11px; font-weight: 500; color: #888; text-align: center; padding: 3px 2px 6px; border-bottom: 1px solid #eee; }
+  table.avail th.slot-h { text-align: left; min-width: 82px; }
+  table.avail td { text-align: center; padding: 3px 2px; border-bottom: 1px solid #eee; }
+  table.avail td.slot-l { text-align: left; color: #666; padding-right: 8px; white-space: nowrap; }
+  table.avail tr:last-child td { border-bottom: none; }
+  table.avail input[type=checkbox] { accent-color: #378ADD; cursor: pointer; width: 14px; height: 14px; }
+  .other-input { margin-top: 6px; display: none; }
+  .submit-btn { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 9px; background: #fff; font-size: 15px; font-weight: 500; cursor: pointer; color: #1a1a1a; margin-top: 0.5rem; transition: background 0.15s; }
+  .submit-btn:hover { background: #f5f5f3; }
+  .banner { border-radius: 8px; padding: 12px 16px; font-size: 14px; margin-bottom: 1rem; display: none; }
+  .banner.success { background: #EAF3DE; color: #27500A; border: 1px solid #97C459; }
+  .banner.update { background: #FAEEDA; color: #633806; border: 1px solid #EF9F27; }
+  .dir-link { display: block; text-align: center; margin-top: 1.25rem; font-size: 13px; color: #378ADD; text-decoration: none; }
+  .dir-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M5.3 5.3a10 10 0 0 1 13.4 13.4M18.7 5.3a10 10 0 0 1-13.4 13.4"/></svg>
+    </div>
+    <div class="header-text">
+      <h1>Tennis group</h1>
+      <p>Join the member directory</p>
+    </div>
+  </div>
+
+  <p class="section-sub">Fill out the form below to appear in the member directory. Your info will be visible to all group members.</p>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="row2">
+    <div class="field"><label>First name</label><input id="f-first" placeholder="Alex" /></div>
+    <div class="field"><label>Last name initial</label><input id="f-last" placeholder="K" maxlength="1" style="text-transform:uppercase" /></div>
+  </div>
+
+  <div class="field"><label>Neighborhood / borough</label>
+    <select id="f-hood">
+      <option value="">Select neighborhood</option>
+      <option>Upper West Side (Manhattan)</option><option>Upper East Side (Manhattan)</option>
+      <option>Midtown (Manhattan)</option><option>Chelsea / Flatiron (Manhattan)</option>
+      <option>Greenwich Village / SoHo (Manhattan)</option><option>Lower East Side (Manhattan)</option>
+      <option>Harlem / Washington Heights (Manhattan)</option><option>Bronx</option>
+      <option>Astoria / LIC (Queens)</option><option>Other Queens</option>
+      <option>Brooklyn Heights / DUMBO (Brooklyn)</option><option>Park Slope / Prospect Park (Brooklyn)</option>
+      <option>Williamsburg / Bushwick (Brooklyn)</option><option>Other Brooklyn</option>
+      <option>Staten Island</option><option>New Jersey</option><option>Other</option>
+    </select>
+  </div>
+
+  <div class="field"><label>NTRP skill level</label>
+    <select id="f-ntrp">
+      <option value="">Select level</option>
+      <option>2.0 – Beginner</option><option>2.5 – Advanced beginner</option>
+      <option>3.0 – Intermediate</option><option>3.5 – Strong intermediate</option>
+      <option>4.0 – Advanced</option><option>4.5 – Strong advanced</option>
+      <option>5.0+ – Competitive</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Play style (select all that apply)</label>
+    <div class="group-label">Casual</div>
+    <div class="check-group">
+      <label class="check-pill" data-color="blue" data-value="Singles (casual)"><input type="checkbox">Singles (casual)</label>
+      <label class="check-pill" data-color="blue" data-value="Doubles (casual)"><input type="checkbox">Doubles (casual)</label>
+      <label class="check-pill" data-color="purple" data-value="Looking to rally / hit around"><input type="checkbox">Looking to rally / hit around</label>
+    </div>
+    <div class="group-label">Competitive</div>
+    <div class="check-group">
+      <label class="check-pill" data-color="coral" data-value="Singles (competitive)"><input type="checkbox">Singles (competitive)</label>
+      <label class="check-pill" data-color="coral" data-value="Doubles (competitive)"><input type="checkbox">Doubles (competitive)</label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Preferred courts</label>
+    <div class="check-group" id="courts-group">
+      <label class="check-pill" data-color="blue" data-value="Riverside 119th (Manhattan)"><input type="checkbox">Riverside 119th</label>
+      <label class="check-pill" data-color="blue" data-value="Riverside 96th (Manhattan)"><input type="checkbox">Riverside 96th</label>
+      <label class="check-pill" data-color="blue" data-value="Central Park (Manhattan)"><input type="checkbox">Central Park</label>
+      <label class="check-pill" data-color="blue" data-value="Frederick Johnson Playground (Manhattan)"><input type="checkbox">Frederick Johnson</label>
+      <label class="check-pill" data-color="blue" data-value="Riverbank State Park (Manhattan)"><input type="checkbox">Riverbank State Park</label>
+      <label class="check-pill" data-color="blue" data-value="Stadium Tennis Center at Mill Pond Park (Bronx)"><input type="checkbox">Mill Pond Park (Bronx)</label>
+      <label class="check-pill" data-color="blue" data-value="Astoria Park (Queens)"><input type="checkbox">Astoria Park</label>
+      <label class="check-pill" data-color="blue" data-value="USTA Billie Jean King NTC (Queens)"><input type="checkbox">USTA BJK NTC</label>
+      <label class="check-pill" data-color="blue" data-value="Prospect Park Tennis Center (Brooklyn)"><input type="checkbox">Prospect Park (BK)</label>
+      <label class="check-pill" data-color="blue" data-value="McCarren Tennis Center (Brooklyn)"><input type="checkbox">McCarren (BK)</label>
+      <label class="check-pill" data-color="blue" data-value="Other" id="other-court-pill"><input type="checkbox">Other</label>
+    </div>
+    <div class="other-input" id="other-court-wrap">
+      <input id="other-court-text" placeholder="Specify other court..." />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Availability</label>
+    <div class="avail-wrap">
+      <table class="avail">
+        <thead>
+          <tr>
+            <th class="slot-h"></th>
+            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+          </tr>
+        </thead>
+        <tbody id="avail-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="field"><label>Contact info (phone, Instagram, etc.)</label>
+    <input id="f-contact" placeholder="e.g. @alexk or 917-555-0123" />
+  </div>
+  <div class="field"><label>Anything else? (optional)</label>
+    <textarea id="f-note" placeholder="e.g. Looking for a hitting partner, happy to rally with all levels..."></textarea>
+  </div>
+
+  <button class="submit-btn" onclick="submitForm()">Add me to the directory</button>
+  <a class="dir-link" href="tennis-directory.html">View the member directory &rarr;</a>
+</div>
+
+<script>
+const STORAGE_KEY = 'tennis-dir-members-v1';
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const SLOTS = ['Before 9am','9am–12pm','12–3pm','3–6pm','6pm+'];
+
+function buildAvailTable() {
+  const tbody = document.getElementById('avail-body');
+  SLOTS.forEach(slot => {
+    const tr = document.createElement('tr');
+    const lbl = document.createElement('td'); lbl.className = 'slot-l'; lbl.textContent = slot; tr.appendChild(lbl);
+    DAYS.forEach(day => {
+      const td = document.createElement('td');
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.day = day; cb.dataset.slot = slot;
+      td.appendChild(cb); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function initPills() {
+  document.querySelectorAll('.check-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const color = pill.dataset.color || 'blue';
+      const selClass = color === 'coral' ? 'sel-coral' : color === 'purple' ? 'sel-purple' : 'sel-blue';
+      pill.classList.toggle(selClass);
+      if (pill.id === 'other-court-pill') {
+        document.getElementById('other-court-wrap').style.display = pill.classList.contains('sel-blue') ? 'block' : 'none';
+      }
+    });
+  });
+}
+
+function getSelectedByGroup(group) {
+  return Array.from(group.querySelectorAll('.check-pill')).filter(p =>
+    p.classList.contains('sel-blue') || p.classList.contains('sel-coral') || p.classList.contains('sel-purple')
+  ).map(p => p.dataset.value).filter(Boolean);
+}
+
+function getStyles() {
+  return Array.from(document.querySelectorAll('.check-pill[data-value]')).filter(p =>
+    (p.classList.contains('sel-blue') || p.classList.contains('sel-coral') || p.classList.contains('sel-purple')) &&
+    !document.getElementById('courts-group').contains(p)
+  ).map(p => p.dataset.value);
+}
+
+function getCourts() {
+  return getSelectedByGroup(document.getElementById('courts-group')).map(v => {
+    if (v === 'Other') { const t = document.getElementById('other-court-text').value.trim(); return t || 'Other'; }
+    return v;
+  });
+}
+
+function getAvail() {
+  const m = {};
+  document.querySelectorAll('#avail-body input:checked').forEach(cb => {
+    if (!m[cb.dataset.day]) m[cb.dataset.day] = [];
+    m[cb.dataset.day].push(cb.dataset.slot);
+  });
+  return m;
+}
+
+function getMembers() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveMembers(members) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
+}
+
+function showBanner(msg, type) {
+  const b = document.getElementById('banner');
+  b.textContent = msg; b.className = 'banner ' + type; b.style.display = 'block';
+  setTimeout(() => b.style.display = 'none', 6000);
+}
+
+function submitForm() {
+  const first = document.getElementById('f-first').value.trim();
+  const lastInit = document.getElementById('f-last').value.trim().toUpperCase();
+  if (!first) { alert('Please enter your first name.'); return; }
+  const member = {
+    first, lastInit,
+    hood: document.getElementById('f-hood').value,
+    ntrp: document.getElementById('f-ntrp').value,
+    styles: getStyles(),
+    courts: getCourts(),
+    avail: getAvail(),
+    contact: document.getElementById('f-contact').value.trim(),
+    note: document.getElementById('f-note').value.trim(),
+    ts: Date.now(),
+  };
+  const members = getMembers();
+  const idx = members.findIndex(m => m.first.toLowerCase() === first.toLowerCase() && m.lastInit === lastInit);
+  if (idx >= 0) { members[idx] = member; showBanner('Profile updated!', 'update'); }
+  else { members.push(member); showBanner("You're in the directory! Click the link below to see it.", 'success'); }
+  saveMembers(members);
+}
+
+buildAvailTable();
+initPills();
+</script>
+</body>
+</html>
